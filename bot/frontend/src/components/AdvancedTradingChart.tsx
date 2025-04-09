@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { ChartData } from '../types/ChartData';
+import { Data, Layout } from 'plotly.js';
 
 interface AdvancedTradingChartProps {
   data: ChartData;
@@ -13,16 +14,16 @@ const AdvancedTradingChart: React.FC<AdvancedTradingChartProps> = ({
   height = 600,
   loading = false 
 }) => {
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [layout, setLayout] = useState<any>({});
+  const [chartData, setChartData] = useState<Data[]>([]);
+  const [layout, setLayout] = useState<Partial<Layout>>({});
 
   useEffect(() => {
     if (!data || loading) return;
 
     // Create a trace for each indicator
-    const createTrace = (data, name, color, lineType = 'solid', visible = true) => ({
+    const createTrace = (data: ChartData, name: string, color: string, lineType: 'solid' | 'dash' | 'dot' = 'solid', visible: boolean = true): Data => ({
       x: data.timestamp,
-      y: data.values,
+      y: data.price,
       name,
       type: 'scatter',
       line: { 
@@ -30,44 +31,167 @@ const AdvancedTradingChart: React.FC<AdvancedTradingChartProps> = ({
         width: 2,
         dash: lineType
       },
-      visible: visible ? 'true' : 'legendonly'
+      visible: visible ? true : 'legendonly'
     });
 
     // Create all the traces for our chart
     const traces = [
       // Actual Price (solid line)
-      createTrace(data.price, 'Actual Price', '#000000', 'solid', true),
+      createTrace(data, 'Actual Price', '#000000', 'solid', true),
       
       // Moving Averages (dashed lines)
-      createTrace(data.sma20, 'SMA 20', '#2E8B57', 'dash', true),
-      createTrace(data.sma50, 'SMA 50', '#FFD700', 'dash', true),
-      createTrace(data.sma200, 'SMA 200', '#FF4500', 'dash', true),
+      {
+        x: data.timestamp,
+        y: data.sma20,
+        name: 'SMA 20',
+        type: 'scatter' as const,
+        line: { 
+          color: '#2E8B57',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: data.sma50,
+        name: 'SMA 50',
+        type: 'scatter' as const,
+        line: { 
+          color: '#FFD700',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: data.sma200,
+        name: 'SMA 200',
+        type: 'scatter' as const,
+        line: { 
+          color: '#FF4500',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
       
       // Exponential Moving Averages (dotted lines)
-      createTrace(data.ema12, 'EMA 12', '#00BFFF', 'dot', true),
-      createTrace(data.ema26, 'EMA 26', '#FF69B4', 'dot', true),
+      {
+        x: data.timestamp,
+        y: data.ema12,
+        name: 'EMA 12',
+        type: 'scatter' as const,
+        line: { 
+          color: '#00BFFF',
+          width: 2,
+          dash: 'dot' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: data.ema26,
+        name: 'EMA 26',
+        type: 'scatter' as const,
+        line: { 
+          color: '#FF69B4',
+          width: 2,
+          dash: 'dot' as const
+        },
+        visible: true
+      },
       
       // RSI with thresholds (dashed line)
-      createTrace({
-        timestamp: data.timestamp,
-        values: data.rsi
-      }, 'RSI (14)', '#00BFFF', 'dash', true),
-      createTrace({
-        timestamp: data.timestamp,
-        values: Array(data.timestamp.length).fill(70)
-      }, 'RSI Overbought', '#FF0000', 'dash', true),
-      createTrace({
-        timestamp: data.timestamp,
-        values: Array(data.timestamp.length).fill(30)
-      }, 'RSI Oversold', '#00FF00', 'dash', true),
+      {
+        x: data.timestamp,
+        y: data.rsi,
+        name: 'RSI (14)',
+        type: 'scatter' as const,
+        line: { 
+          color: '#00BFFF',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: Array(data.timestamp.length).fill(70),
+        name: 'RSI Overbought',
+        type: 'scatter' as const,
+        line: { 
+          color: '#FF0000',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: Array(data.timestamp.length).fill(30),
+        name: 'RSI Oversold',
+        type: 'scatter' as const,
+        line: { 
+          color: '#00FF00',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
       
       // MACD (dotted line with signal)
-      createTrace(data.macd, 'MACD', '#FFA500', 'dot', true),
-      createTrace(data.macdSignal, 'MACD Signal', '#808080', 'dot', true),
+      {
+        x: data.timestamp,
+        y: data.macd,
+        name: 'MACD',
+        type: 'scatter' as const,
+        line: { 
+          color: '#FFA500',
+          width: 2,
+          dash: 'dot' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: data.macdSignal,
+        name: 'MACD Signal',
+        type: 'scatter' as const,
+        line: { 
+          color: '#808080',
+          width: 2,
+          dash: 'dot' as const
+        },
+        visible: true
+      },
       
       // Bollinger Bands (dashed lines)
-      createTrace(data.bollingerUpper, 'Bollinger Upper', '#A9A9A9', 'dash', true),
-      createTrace(data.bollingerLower, 'Bollinger Lower', '#A9A9A9', 'dash', true)
+      {
+        x: data.timestamp,
+        y: data.bollingerUpper,
+        name: 'Bollinger Upper',
+        type: 'scatter' as const,
+        line: { 
+          color: '#A9A9A9',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      },
+      {
+        x: data.timestamp,
+        y: data.bollingerLower,
+        name: 'Bollinger Lower',
+        type: 'scatter' as const,
+        line: { 
+          color: '#A9A9A9',
+          width: 2,
+          dash: 'dash' as const
+        },
+        visible: true
+      }
     ];
 
     setChartData(traces);

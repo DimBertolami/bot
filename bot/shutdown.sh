@@ -9,11 +9,11 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}Shutting down Trading Bot System...${NC}"
 
 # Try to kill specific PIDs if they were saved
-BACKEND_PID=38363
-FRONTEND_PID=38426
+BACKEND_PID=8536
+FRONTEND_PID=8802
 
 # Try to kill backend by PID first
-if [ ! -z "38363" ] && kill 38363 2>/dev/null; then
+if [ ! -z "8536" ] && kill 8536 2>/dev/null; then
     echo -e "${GREEN}✓ Backend server stopped${NC}"
 else
     echo -e "${YELLOW}Searching for backend server process...${NC}"
@@ -28,7 +28,7 @@ else
 fi
 
 # Try to kill frontend by PID first
-if [ ! -z "38426" ] && kill 38426 2>/dev/null; then
+if [ ! -z "8802" ] && kill 8802 2>/dev/null; then
     echo -e "${GREEN}✓ Frontend server stopped${NC}"
 else
     echo -e "${YELLOW}Searching for frontend server processes...${NC}"
@@ -40,6 +40,12 @@ else
             echo -e "${GREEN}✓ Frontend server on port $PORT stopped${NC}"
         fi
     done
+fi
+
+# Stop resource manager
+if [ -f "$BOT_DIR/resource_manager_service.sh" ]; then
+    echo -e "${YELLOW}Stopping resource manager...${NC}"
+    bash "$BOT_DIR/resource_manager_service.sh" stop
 fi
 
 echo -e "${GREEN}Trading Bot System has been stopped.${NC}"
