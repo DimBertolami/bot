@@ -22,7 +22,8 @@
     "react-router-dom": "^7.4.1",
     "recharts": "^2.15.1",
     "session": "^0.1.0",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
@@ -36,6 +37,9 @@
     "@storybook/test": "^8.6.11",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^16.18.68",
+    "@types/recharts": "^1.8.20",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/browser": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",

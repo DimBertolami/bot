@@ -1,48 +1,41 @@
 import React from 'react';
-import { LayoutDashboard, LineChart, Settings, Shield } from 'lucide-react';
-import Dashboard from './components/Dashboard';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
+import Navigation from './components/Navigation';
+import Dashboard from './pages/Dashboard';
+import { LayoutDashboard } from 'lucide-react';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 shadow-md">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold text-blue-400">CryptoWatch</h1>
-        </div>
-        <nav className="mt-4">
-          <a href="#" className="flex items-center px-4 py-2 bg-gray-700 text-blue-400">
-            <LayoutDashboard className="mr-3" size={20} />
-            Dashboard
-          </a>
-          <a href="#" className="flex items-center px-4 py-2 text-gray-400 hover:bg-gray-700">
-            <LineChart className="mr-3" size={20} />
-            Trading
-          </a>
-          <a href="#" className="flex items-center px-4 py-2 text-gray-400 hover:bg-gray-700">
-            <Shield className="mr-3" size={20} />
-            Risk Analysis
-          </a>
-          <a href="#" className="flex items-center px-4 py-2 text-gray-400 hover:bg-gray-700">
-            <Settings className="mr-3" size={20} />
-            Settings
-          </a>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1">
-        <header className="bg-gray-800 shadow">
-          <div className="px-6 py-4">
-            <h2 className="text-xl font-semibold text-gray-100">Dashboard Overview</h2>
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-900 flex data-[theme=light]:bg-white">
+          {/* Sidebar */}
+          <div className="w-64 bg-gray-800 shadow-md data-[theme=light]:bg-gray-50">
+            <div className="p-4">
+              <h1 className="text-2xl font-bold text-blue-400">CryptoWatch</h1>
+            </div>
+            <Navigation activePath={useLocation().pathname} onNavigate={(path) => window.location.pathname = path} />
           </div>
-        </header>
 
-        <main>
-          <Dashboard />
-        </main>
-      </div>
-    </div>
+          {/* Main Content */}
+          <div className="flex-1">
+            <header className="bg-gray-800 shadow data-[theme=light]:bg-gray-50">
+              <div className="px-6 py-4">
+                <h2 className="text-xl font-semibold text-gray-100 data-[theme=light]:text-gray-900">Dashboard Overview</h2>
+              </div>
+            </header>
+
+            <main className="p-6">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                {/* Add more routes as components are implemented */}
+              </Routes>
+            </main>
+          </div>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
