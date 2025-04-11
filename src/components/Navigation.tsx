@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Lightbulb, ChartBar, DollarSign, Clock, Settings } from 'lucide-react';
+import { LayoutDashboard, Lightbulb, BarChart, DollarSign, Clock, Settings } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+
+// Icon wrapper component to handle className prop
+const IconWrapper: React.FC<{ icon: React.ComponentType<any>, className?: string }> = ({ icon: Icon, className }) => (
+  <Icon className={className} />
+);
 
 interface NavigationItem {
     id: string;
@@ -26,7 +31,7 @@ const navigationItems: NavigationItem[] = [
     {
         id: 'analysis',
         label: 'Crypto Analysis',
-        icon: ChartBar,
+        icon: BarChart,
         path: '/analysis',
         children: [
             {
@@ -81,7 +86,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePath, onNavigate }) => {
                                     ${activePath === item.path ? 'bg-gray-700 text-blue-400' : ''}
                                 `}
                             >
-                                <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
+                                <IconWrapper icon={item.icon} className="mr-3 h-5 w-5" />
                                 {item.label}
                             </button>
                             {isAnalysisOpen && (
@@ -95,7 +100,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePath, onNavigate }) => {
                                                 ${activePath === child.path ? 'bg-gray-700 text-blue-400' : ''}
                                             `}
                                         >
-                                            <child.icon className="mr-3 h-4 w-4" aria-hidden="true" />
+                                            <IconWrapper icon={child.icon} className="mr-3 h-4 w-4" />
                                             {child.label}
                                         </button>
                                     ))}
@@ -110,7 +115,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePath, onNavigate }) => {
                                 ${activePath === item.path ? 'bg-gray-700 text-blue-400' : ''}
                             `}
                         >
-                            <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
+                            <IconWrapper icon={item.icon} className="mr-3 h-5 w-5" />
                             {item.label}
                         </button>
                     )}
